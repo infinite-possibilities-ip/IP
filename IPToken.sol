@@ -26,6 +26,7 @@ contract SafeMath {
     }
 }
 
+// ERC Token Standard #20 Interface
 contract ERC20Interface {
     function totalSupply() public constant returns (uint);
     function balanceOf(address tokenOwner) public constant returns (uint balance);
@@ -38,7 +39,7 @@ contract ERC20Interface {
     event Approval(address indexed tokenOwner, address indexed spender, uint tokens);
 }
 
-
+// approve/execute function
 contract ApproveAndCallFallBack {
     function receiveApproval(address from, uint256 tokens, address token, bytes data) public;
 }
