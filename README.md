@@ -1,10 +1,10 @@
-# Infinite Possibilities Token
+# Infinite Possibilities
 
-This is the codebase for the core token which runs all planned/future features of the Infinite Possibilities Token.
+This is the codebase for the core token which runs all planned/future features of Infinite Possibilities.
 
 ----------------------------------------------------------------------------
 
-Name: Infinite Possibilities Token
+Name: Infinite Possibilities
 
 Symbol: IP
 

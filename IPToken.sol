@@ -1,7 +1,7 @@
 pragma solidity ^0.4.24;
 
 // ----------------------------------------------------------------------------
-// Name: Infinite Possibilities Token
+// Name: Infinite Possibilities
 // Symbol: IP
 // Total supply: 1500000000
 // Decimals: 18
