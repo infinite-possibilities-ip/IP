@@ -70,3 +70,86 @@ contract Owned {
         newOwner = address(0);
     }
 }
+
+// ERC20 Token with symbol, name, decimals
+contract IPToken is ERC20Interface, Owned, SafeMath {
+    string public symbol;
+    string public  name;
+    uint8 public decimals;
+    uint public _totalSupply;
+
+    mapping(address => uint) balances;
+    mapping(address => mapping(address => uint)) allowed;
+
+
+    // Constructor
+    constructor() public {
+        symbol = "IP";
+        name = "Infinite Possibilities";
+        decimals = 18;
+        _totalSupply = 1500000000000000000000000000;
+        balances[**TBC_ADDRESS**] = _totalSupply;
+        emit Transfer(address(0), **TBC_ADDRESS**, _totalSupply);
+    }
+
+    // Total supply
+    function totalSupply() public constant returns (uint) {
+        return _totalSupply  - balances[address(0)];
+    }
+
+    // Get the token balance for account tokenOwner
+    function balanceOf(address tokenOwner) public constant returns (uint balance) {
+        return balances[tokenOwner];
+    }
+
+    // Transfer the balance from token owner's account to to account
+    function transfer(address to, uint tokens) public returns (bool success) {
+        balances[msg.sender] = safeSub(balances[msg.sender], tokens);
+        balances[to] = safeAdd(balances[to], tokens);
+        emit Transfer(msg.sender, to, tokens);
+        return true;
+    }
+
+    // Token owner can approve for spender to transferFrom(...) tokens
+    // from the token owner's account
+    function approve(address spender, uint tokens) public returns (bool success) {
+        allowed[msg.sender][spender] = tokens;
+        emit Approval(msg.sender, spender, tokens);
+        return true;
+    }
+
+    // Transfer tokens from the from account to the to account
+    function transferFrom(address from, address to, uint tokens) public returns (bool success) {
+        balances[from] = safeSub(balances[from], tokens);
+        allowed[from][msg.sender] = safeSub(allowed[from][msg.sender], tokens);
+        balances[to] = safeAdd(balances[to], tokens);
+        emit Transfer(from, to, tokens);
+        return true;
+    }
+
+    // Returns the amount of tokens approved by the owner that can be
+    // transferred to the spender's account
+    function allowance(address tokenOwner, address spender) public constant returns (uint remaining) {
+        return allowed[tokenOwner][spender];
+    }
+
+    // Token owner can approve for spender to transferFrom(...) tokens
+    // from the token owner's account. The spender contract function
+    // receiveApproval(...) is then executed
+    function approveAndCall(address spender, uint tokens, bytes data) public returns (bool success) {
+        allowed[msg.sender][spender] = tokens;
+        emit Approval(msg.sender, spender, tokens);
+        ApproveAndCallFallBack(spender).receiveApproval(msg.sender, tokens, this, data);
+        return true;
+    }
+
+    // Don't accept ETH
+    function () public payable {
+        revert();
+    }
+
+    // Allow transfer out any accidentally sent ERC20 tokens
+    function transferAnyERC20Token(address tokenAddress, uint tokens) public onlyOwner returns (bool success) {
+        return ERC20Interface(tokenAddress).transfer(owner, tokens);
+    }
+}
